@@ -1,13 +1,74 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+.App {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.main_title {
+  box-sizing: border-box;
+  width: 60%;
+  display: flex;
+  justify-content: center;
+  border: solid pink;
+}
+
+.container {
+  border: 0;
+  display: flex;
+  flex-wrap: wrap;
+  width: 80%;
+  height: 800px;
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.content {
+  box-sizing: border-box;
+  display: flex;
+  /* border: solid seagreen; */
+  width: 60%;
+  align-self: center;
+  justify-content: center;
+}
+
+input {
+  width: 100%;
+  height: 20px;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  bottom: 0;
+  margin: 0;
+}
+
+li {
+  border-bottom: solid gray;
+}
+
+li:last-child {
+  border: 0;
+}
+
+.suggestions {
+  box-sizing: border-box;
+  margin: 0;
+  border: 0;
+  padding: 0;
+  align-self: baseline;
+  width: 60%;
+  border: solid gray;
+  align-self: center;
+  /* height: 200px; */
+}
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* justify-content: center; */
+  width: 100%;
+  height: 50%;
 }
