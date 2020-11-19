@@ -105,7 +105,15 @@ class AutoComplete extends Component {
       <ul>
         {
           filteredSuggestions
-            .map((sug, index) => (<li key={index} onClick={onClick}>{sug}</li>))
+            .map((sug, index) => (
+              <li
+                className="card card-sm card-body bg-primary border-light mb-0"
+                key={index}
+                onClick={onClick}
+              >
+                {sug}
+              </li>
+            ))
         }
       </ul>
     );
@@ -128,21 +136,23 @@ class AutoComplete extends Component {
         showSuggestions,
         userInput,
         filteredSuggestions,
+        activeSuggestion,
       },
     } = this;
+    console.log(activeSuggestion);
     // console.log(userInput);
-    console.log(filteredSuggestions);
+    // console.log(filteredSuggestions);
     if (showSuggestions && userInput) {
       suggestionsListComponent = (filteredSuggestions.length > 0)
         ? (renderSuggestionsList(filteredSuggestions))
         : (rednerEmptySuggestion());
     }
-    console.log(userInput);
+    // console.log(userInput);
     const isShowSuggestions = userInput && userInput.length > 0
       // && filteredSuggestions.length > 0
       && showSuggestions;
     return (
-      <div className="container">
+      <div className="container card bg-primary shadow-soft border-light px-4 py-5">
         <div className="main_title">
           <h1>React AutoComplete</h1>
         </div>
@@ -150,6 +160,9 @@ class AutoComplete extends Component {
           <div className="content">
             <input
               type="text"
+              className="form-control form-control-xl border-light"
+              id="subscribeInputEmail"
+              placeholder="pick a color :)"
               onChange={onChange}
               onKeyDown={onKeyDown}
               value={userInput}
