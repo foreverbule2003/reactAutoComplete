@@ -8,7 +8,7 @@ class AutoComplete extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeSuggestion: 0,
+      activeSuggestion: 1,
       filteredSuggestions: [],
       showSuggestions: false,
       userInput: '',
@@ -18,16 +18,16 @@ class AutoComplete extends Component {
   escapeRegExp = (string) => string.replace(/[^a-zA-Z-\-']/g, '');
 
   onChange = (e) => {
-    const { escapeRegExp } = this;
-    const { suggestions } = this.props;
-    // console.log(escapeRegExp(e.target.value));
+    const {
+      escapeRegExp,
+      props: { suggestions },
+    } = this;
+    // const { suggestions } = this.props;
     const userInput = escapeRegExp((e.target.value)).toLowerCase();
-    // console.log(userInput);
     const filteredSuggestions = suggestions
       .filter((s) => s.toLowerCase().includes(userInput));
-    // console.log(filteredSuggestions);
     this.setState({
-      activeSuggestion: 0,
+      activeSuggestion: 1,
       filteredSuggestions,
       showSuggestions: true,
       userInput,
@@ -35,10 +35,8 @@ class AutoComplete extends Component {
   }
 
   onClick = (e) => {
-    // console.log(e.target);
-    // console.log(e.target.innerText);
     this.setState({
-      activeSuggestion: 0,
+      activeSuggestion: 1,
       filteredSuggestions: [],
       showSuggestions: false,
       userInput: e.target.innerText,
@@ -46,60 +44,61 @@ class AutoComplete extends Component {
   }
 
   onKeyDown = (e) => {
-    const { activeSuggestion, filteredSuggestions } = this.state;
+    const {
+      activeSuggestion,
+      filteredSuggestions,
+      showSuggestions,
+    } = this.state;
     const { keyCode } = e;
-    // 13 return
-    // 38 up
-    // 40 down
-    // console.log(filteredSuggestions, activeSuggestion);
-    if (keyCode === 13) {
-      // if (!this.userInput) return;
-      this.setState((prevState) => (
-        {
-          ...prevState,
-          activeSuggestion: 0,
+    let newActiveSuggestion;
+    let newState;
+    if (!showSuggestions) return;
+    switch (keyCode) {
+      case 13:
+        // key return
+        newState = {
+          activeSuggestion: 1,
           showSuggestions: false,
           userInput: filteredSuggestions[activeSuggestion - 1],
-        }
-      ));
-    } else if (keyCode === 38) {
-      // console.log('up!!!');
-      e.preventDefault();
-      // if (activeSuggestion === 0) return;
-      const newActiveSuggestion = activeSuggestion <= 0
-        ? filteredSuggestions.length
-        : activeSuggestion;
-      this.setState((prevState) => (
-        {
-          ...prevState,
-          activeSuggestion: newActiveSuggestion,
-          userInput: filteredSuggestions[newActiveSuggestion - 1],
-        }
-      ));
-    } else if (keyCode === 40) {
-      // console.log('down!!!');
-      let newActiveSuggestion;
-      if (activeSuggestion === 0 || activeSuggestion === filteredSuggestions.length) {
-        newActiveSuggestion = 1;
-      } else {
-        newActiveSuggestion = activeSuggestion >= filteredSuggestions.length - 1
+        };
+        break;
+      case 38:
+        // key up
+        e.preventDefault();
+        newActiveSuggestion = activeSuggestion === 1
           ? filteredSuggestions.length
-          : activeSuggestion + 1;
-      }
-      this.setState((prevState) => (
-        {
-          ...prevState,
+          : activeSuggestion - 1;
+        newState = {
           activeSuggestion: newActiveSuggestion,
           userInput: filteredSuggestions[newActiveSuggestion - 1],
+        };
+        break;
+      case 40:
+        // key down
+        if (activeSuggestion === filteredSuggestions.length) {
+          newActiveSuggestion = 1;
+        } else {
+          newActiveSuggestion = activeSuggestion >= filteredSuggestions.length - 1
+            ? filteredSuggestions.length
+            : activeSuggestion + 1;
         }
-      ));
+        newState = {
+          activeSuggestion: newActiveSuggestion,
+          userInput: filteredSuggestions[newActiveSuggestion - 1],
+        };
+        break;
+      default:
+        break;
     }
+    this.setState({
+      ...newState,
+    });
   }
 
   renderSuggestionsList = () => {
     const {
       onClick,
-      state: { filteredSuggestions },
+      state: { filteredSuggestions, activeSuggestion },
     } = this;
     return (
       <ul>
@@ -107,7 +106,7 @@ class AutoComplete extends Component {
           filteredSuggestions
             .map((sug, index) => (
               <li
-                className="card card-sm card-body bg-primary border-light mb-0"
+                className={`card card-sm card-body ${index === activeSuggestion - 1 ? 'item-style' : 'bg-primary'} border-light mb-0`}
                 key={index}
                 onClick={onClick}
               >
@@ -136,20 +135,15 @@ class AutoComplete extends Component {
         showSuggestions,
         userInput,
         filteredSuggestions,
-        activeSuggestion,
       },
     } = this;
-    console.log(activeSuggestion);
-    // console.log(userInput);
-    // console.log(filteredSuggestions);
     if (showSuggestions && userInput) {
       suggestionsListComponent = (filteredSuggestions.length > 0)
-        ? (renderSuggestionsList(filteredSuggestions))
+        ? (renderSuggestionsList())
         : (rednerEmptySuggestion());
     }
-    // console.log(userInput);
-    const isShowSuggestions = userInput && userInput.length > 0
-      // && filteredSuggestions.length > 0
+    const isShowSuggestions = userInput
+      && userInput.length > 0
       && showSuggestions;
     return (
       <div className="container card bg-primary shadow-soft border-light px-4 py-5">

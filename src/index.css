@@ -89,6 +89,10 @@ input {
   height: 50%;
 }
 
+.item-style {
+  background: white !important;
+}
+
 /*
 
 =========================================================
